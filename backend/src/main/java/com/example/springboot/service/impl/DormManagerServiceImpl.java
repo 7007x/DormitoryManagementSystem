@@ -4,6 +4,7 @@ package com.example.springboot.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springboot.common.PasswordUtil;
 import com.example.springboot.entity.DormManager;
 import com.example.springboot.mapper.DormManagerMapper;
 import com.example.springboot.service.DormManagerService;
@@ -29,9 +30,10 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
     public DormManager dormManagerLogin(String username, String password) {
         QueryWrapper<DormManager> qw = new QueryWrapper<>();
         qw.eq("username", username);
-        qw.eq("password", password);
         DormManager dormManager = dormManagerMapper.selectOne(qw);
-        if (dormManager != null) {
+
+        // 使用BCrypt验证密码
+        if (dormManager != null && PasswordUtil.matches(password, dormManager.getPassword())) {
             return dormManager;
         } else {
             return null;
@@ -43,6 +45,9 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
      */
     @Override
     public int addNewDormManager(DormManager dormManager) {
+        // 加密密码后再存储
+        String encodedPassword = PasswordUtil.encode(dormManager.getPassword());
+        dormManager.setPassword(encodedPassword);
         int insert = dormManagerMapper.insert(dormManager);
         return insert;
     }
@@ -64,6 +69,11 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
      */
     @Override
     public int updateNewDormManager(DormManager dormManager) {
+        // 如果密码不为空且不是加密后的密码，则加密
+        if (dormManager.getPassword() != null && !dormManager.getPassword().startsWith("$2a$")) {
+            String encodedPassword = PasswordUtil.encode(dormManager.getPassword());
+            dormManager.setPassword(encodedPassword);
+        }
         int i = dormManagerMapper.updateById(dormManager);
         return i;
     }

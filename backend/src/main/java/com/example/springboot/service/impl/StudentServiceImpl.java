@@ -3,6 +3,7 @@ package com.example.springboot.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springboot.common.PasswordUtil;
 import com.example.springboot.entity.Student;
 import com.example.springboot.mapper.StudentMapper;
 import com.example.springboot.service.StudentService;
@@ -27,9 +28,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public Student stuLogin(String username, String password) {
         QueryWrapper<Student> qw = new QueryWrapper<>();
         qw.eq("username", username);
-        qw.eq("password", password);
         Student student = studentMapper.selectOne(qw);
-        if (student != null) {
+
+        // 使用BCrypt验证密码
+        if (student != null && PasswordUtil.matches(password, student.getPassword())) {
             return student;
         } else {
             return null;
@@ -41,6 +43,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public int addNewStudent(Student student) {
+        // 加密密码后再存储
+        String encodedPassword = PasswordUtil.encode(student.getPassword());
+        student.setPassword(encodedPassword);
         int insert = studentMapper.insert(student);
         return insert;
     }
@@ -62,6 +67,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public int updateNewStudent(Student student) {
+        // 如果密码不为空且不是加密后的密码，则加密
+        if (student.getPassword() != null && !student.getPassword().startsWith("$2a$")) {
+            String encodedPassword = PasswordUtil.encode(student.getPassword());
+            student.setPassword(encodedPassword);
+        }
         int i = studentMapper.updateById(student);
         return i;
     }
