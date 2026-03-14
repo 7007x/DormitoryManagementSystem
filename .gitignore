@@ -1,0 +1,61 @@
+# Claude Code
+.claude/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OTHER directory (custom)
+OTHER/
+
+# SQL scripts (暂时不提交)
+sql/
+
+# Maven (Spring Boot)
+target/
+*.class
+*.jar
+*.war
+
+# Node.js / Vue
+node_modules/
+vue/dist/
+
+# Windows Zone.Identifier files
+*:Zone.Identifier
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 敏感配置
+application-local.properties
+*.local.properties
+
+# Vue 缓存
+.vuepress/dist/
+.cache/
+.eslintcache
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*~
+backup/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 日志目录
+logs/
