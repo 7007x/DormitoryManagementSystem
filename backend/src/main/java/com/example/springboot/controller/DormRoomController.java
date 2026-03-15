@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.DormRoom;
 import com.example.springboot.service.DormRoomService;
@@ -17,8 +18,9 @@ public class DormRoomController {
     private DormRoomService dormRoomService;
 
     /**
-     * 添加房间
+     * 添加房间 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PostMapping("/add")
     public Result<?> add(@RequestBody DormRoom dormRoom) {
         int i = dormRoomService.addNewRoom(dormRoom);
@@ -30,8 +32,9 @@ public class DormRoomController {
     }
 
     /**
-     * 更新房间
+     * 更新房间 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
     public Result<?> update(@RequestBody DormRoom dormRoom) {
         int i = dormRoomService.updateNewRoom(dormRoom);
@@ -43,8 +46,9 @@ public class DormRoomController {
     }
 
     /**
-     * 删除房间
+     * 删除房间 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{dormRoomId}")
     public Result<?> delete(@PathVariable Integer dormRoomId) {
         int i = dormRoomService.deleteRoom(dormRoomId);
@@ -56,8 +60,9 @@ public class DormRoomController {
     }
 
     /**
-     * 查找房间
+     * 查找房间 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -71,8 +76,9 @@ public class DormRoomController {
     }
 
     /**
-     * 首页顶部：空宿舍统计
+     * 首页顶部：空宿舍统计 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/noFullRoom")
     public Result<?> noFullRoom() {
         int num = dormRoomService.notFullRoom();
@@ -84,8 +90,9 @@ public class DormRoomController {
     }
 
     /**
-     * 删除床位学生信息
+     * 删除床位学生信息 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @DeleteMapping("/delete/{bedName}/{dormRoomId}/{calCurrentNum}")
     public Result<?> deleteBedInfo(@PathVariable String bedName, @PathVariable Integer dormRoomId, @PathVariable int calCurrentNum) {
         int i = dormRoomService.deleteBedInfo(bedName, dormRoomId, calCurrentNum);
@@ -97,8 +104,9 @@ public class DormRoomController {
     }
 
     /**
-     * 床位信息，查询该学生是否已有床位
+     * 床位信息，查询该学生是否已有床位 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/judgeHadBed/{value}")
     public Result<?> judgeHadBed(@PathVariable String value) {
         DormRoom dormRoom = dormRoomService.judgeHadBed(value);
@@ -110,8 +118,9 @@ public class DormRoomController {
     }
 
     /**
-     * 主页 住宿人数
+     * 主页 住宿人数 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/selectHaveRoomStuNum")
     public Result<?> selectHaveRoomStuNum() {
         Long count = dormRoomService.selectHaveRoomStuNum();
@@ -123,8 +132,9 @@ public class DormRoomController {
     }
 
     /**
-     * 住宿分布人数
+     * 住宿分布人数 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/getEachBuildingStuNum/{num}")
     public Result<?> getEachBuildingStuNum(@PathVariable int num) {
         ArrayList<Long> arrayList = new ArrayList();
@@ -141,8 +151,9 @@ public class DormRoomController {
     }
 
     /**
-     * 学生功能： 我的宿舍
+     * 学生功能： 我的宿舍 - 学生可访问
      */
+    @RequireRole("stu")
     @GetMapping("/getMyRoom/{name}")
     public Result<?> getMyRoom(@PathVariable String name) {
         DormRoom dormRoom = dormRoomService.judgeHadBed(name);
@@ -154,8 +165,9 @@ public class DormRoomController {
     }
 
     /**
-     * 检查房间是否满员
+     * 检查房间是否满员 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/checkRoomState/{dormRoomId}")
     public Result<?> checkRoomState(@PathVariable Integer dormRoomId) {
         DormRoom dormRoom = dormRoomService.checkRoomState(dormRoomId);
@@ -167,8 +179,9 @@ public class DormRoomController {
     }
 
     /**
-     * 检查床位是否已经有人
+     * 检查床位是否已经有人 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/checkBedState/{dormRoomId}/{bedNum}")
     public Result<?> getMyRoom(@PathVariable Integer dormRoomId, @PathVariable int bedNum) {
         DormRoom dormRoom = dormRoomService.checkBedState(dormRoomId, bedNum);
@@ -180,8 +193,9 @@ public class DormRoomController {
     }
 
     /**
-     * 检查房间是否满员
+     * 检查房间是否存在 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/checkRoomExist/{dormRoomId}")
     public Result<?> checkRoomExist(@PathVariable Integer dormRoomId) {
         DormRoom dormRoom = dormRoomService.checkRoomExist(dormRoomId);

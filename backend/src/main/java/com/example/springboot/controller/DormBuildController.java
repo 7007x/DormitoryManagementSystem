@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.DormBuild;
 import com.example.springboot.service.DormBuildService;
@@ -18,8 +19,9 @@ public class DormBuildController {
     private DormBuildService dormBuildService;
 
     /**
-     * 楼宇添加
+     * 楼宇添加 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PostMapping("/add")
     public Result<?> add(@RequestBody DormBuild dormBuild) {
         int i = dormBuildService.addNewBuilding(dormBuild);
@@ -31,8 +33,9 @@ public class DormBuildController {
     }
 
     /**
-     * 楼宇信息更新
+     * 楼宇信息更新 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PutMapping("/update")
     public Result<?> update(@RequestBody DormBuild dormBuild) {
         int i = dormBuildService.updateNewBuilding(dormBuild);
@@ -44,8 +47,9 @@ public class DormBuildController {
     }
 
     /**
-     * 楼宇删除
+     * 楼宇删除 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{dormBuildId}")
     public Result<?> delete(@PathVariable Integer dormBuildId) {
         int i = dormBuildService.deleteBuilding(dormBuildId);
@@ -57,8 +61,9 @@ public class DormBuildController {
     }
 
     /**
-     * 楼宇查找
+     * 楼宇查找 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -72,8 +77,9 @@ public class DormBuildController {
     }
 
     /**
-     * 首页Echarts 获取楼宇信息
+     * 首页Echarts 获取楼宇信息 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/getBuildingName")
     public Result<?> getBuildingName() {
         List<DormBuild> buildingName = dormBuildService.getBuildingId();

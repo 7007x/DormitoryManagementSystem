@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Repair;
 import com.example.springboot.service.RepairService;
@@ -16,8 +17,9 @@ public class RepairController {
     private RepairService repairService;
 
     /**
-     * 添加订单
+     * 添加报修订单 - 学生可访问
      */
+    @RequireRole("stu")
     @PostMapping("/add")
     public Result<?> add(@RequestBody Repair repair) {
         int i = repairService.addNewOrder(repair);
@@ -29,8 +31,9 @@ public class RepairController {
     }
 
     /**
-     * 更新订单
+     * 更新订单（处理报修） - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
     public Result<?> update(@RequestBody Repair repair) {
         int i = repairService.updateNewOrder(repair);
@@ -42,8 +45,9 @@ public class RepairController {
     }
 
     /**
-     * 删除订单
+     * 删除订单 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @DeleteMapping("/delete/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         int i = repairService.deleteOrder(id);
@@ -55,8 +59,9 @@ public class RepairController {
     }
 
     /**
-     * 查找订单
+     * 查找订单 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -70,8 +75,9 @@ public class RepairController {
     }
 
     /**
-     * 个人申报报修 分页查询
+     * 个人申报报修 分页查询 - 学生可访问（查询自己的报修）
      */
+    @RequireRole("stu")
     @GetMapping("/find/{name}")
     public Result<?> individualFind(@RequestParam(defaultValue = "1") Integer pageNum,
                                     @RequestParam(defaultValue = "10") Integer pageSize,
@@ -87,8 +93,9 @@ public class RepairController {
     }
 
     /**
-     * 首页顶部：报修统计
+     * 首页顶部：报修统计 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/orderNum")
     public Result<?> orderNum() {
         int num = repairService.showOrderNum();

@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.DormManager;
 import com.example.springboot.entity.User;
@@ -18,8 +19,9 @@ public class DormManagerController {
     private DormManagerService dormManagerService;
 
     /**
-     * 宿管添加
+     * 宿管添加 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PostMapping("/add")
     public Result<?> add(@RequestBody DormManager dormManager) {
         int i = dormManagerService.addNewDormManager(dormManager);
@@ -31,8 +33,9 @@ public class DormManagerController {
     }
 
     /**
-     * 宿管信息更新
+     * 宿管信息更新 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PutMapping("/update")
     public Result<?> update(@RequestBody DormManager dormManager) {
         int i = dormManagerService.updateNewDormManager(dormManager);
@@ -44,8 +47,9 @@ public class DormManagerController {
     }
 
     /**
-     * 宿管删除
+     * 宿管删除 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{username}")
     public Result<?> delete(@PathVariable String username) {
         int i = dormManagerService.deleteDormManager(username);
@@ -57,8 +61,9 @@ public class DormManagerController {
     }
 
     /**
-     * 宿管查找
+     * 宿管查找 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,

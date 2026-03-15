@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.AdjustRoom;
 import com.example.springboot.service.AdjustRoomService;
@@ -21,8 +22,9 @@ public class AdjustRoomController {
 
 
     /**
-     * 添加订单
+     * 添加调宿申请 - 学生可访问
      */
+    @RequireRole("stu")
     @PostMapping("/add")
     public Result<?> add(@RequestBody AdjustRoom adjustRoom) {
 
@@ -36,8 +38,9 @@ public class AdjustRoomController {
 
 
     /**
-     * 更新订单
+     * 更新订单（审批调宿申请） - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PutMapping("/update/{state}")
     public Result<?> update(@RequestBody AdjustRoom adjustRoom, @PathVariable Boolean state) {
         if (state) {
@@ -57,8 +60,9 @@ public class AdjustRoomController {
     }
 
     /**
-     * 删除订单
+     * 删除订单 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         int i = adjustRoomService.deleteAdjustment(id);
@@ -70,8 +74,9 @@ public class AdjustRoomController {
     }
 
     /**
-     * 查找订单
+     * 查找订单 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,

@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Notice;
 import com.example.springboot.service.NoticeService;
@@ -18,8 +19,9 @@ public class NoticeController {
     NoticeService noticeService;
 
     /**
-     * 公告添加
+     * 公告添加 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PostMapping("/add")
     public Result<?> add(@RequestBody Notice notice) {
         int i = noticeService.addNewNotice(notice);
@@ -31,8 +33,9 @@ public class NoticeController {
     }
 
     /**
-     * 公告更新
+     * 公告更新 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PutMapping("/update")
     public Result<?> update(@RequestBody Notice notice) {
         int i = noticeService.updateNewNotice(notice);
@@ -44,8 +47,9 @@ public class NoticeController {
     }
 
     /**
-     * 公告删除
+     * 公告删除 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         int i = noticeService.deleteNotice(id);
@@ -57,8 +61,9 @@ public class NoticeController {
     }
 
     /**
-     * 公告查找
+     * 公告查找 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -72,8 +77,9 @@ public class NoticeController {
     }
 
     /**
-     * 首页公告展示
+     * 首页公告展示 - 所有角色可访问（包括学生）
      */
+    @RequireRole({"admin", "dormManager", "stu"})
     @GetMapping("/homePageNotice")
     public Result<?> homePageNotice() {
         List<?> list = noticeService.homePageNotice();

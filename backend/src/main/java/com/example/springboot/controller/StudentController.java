@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
@@ -18,8 +19,9 @@ public class StudentController {
     private StudentService studentService;
 
     /**
-     * 添加学生信息
+     * 添加学生信息 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PostMapping("/add")
     public Result<?> add(@RequestBody Student student) {
         int i = studentService.addNewStudent(student);
@@ -32,8 +34,9 @@ public class StudentController {
     }
 
     /**
-     * 更新学生信息
+     * 更新学生信息 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
     public Result<?> update(@RequestBody Student student) {
         int i = studentService.updateNewStudent(student);
@@ -45,8 +48,9 @@ public class StudentController {
     }
 
     /**
-     * 删除学生信息
+     * 删除学生信息 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{username}")
     public Result<?> delete(@PathVariable String username) {
         int i = studentService.deleteStudent(username);
@@ -58,8 +62,9 @@ public class StudentController {
     }
 
     /**
-     * 查找学生信息
+     * 查找学生信息 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -92,8 +97,9 @@ public class StudentController {
     }
 
     /**
-     * 主页顶部：学生统计
+     * 主页顶部：学生统计 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/stuNum")
     public Result<?> stuNum() {
         int num = studentService.stuNum();
@@ -107,8 +113,9 @@ public class StudentController {
 
     /**
      * 床位信息，查询是否存在该学生
-     * 床位信息，查询床位上的学生信息
+     * 床位信息，查询床位上的学生信息 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/exist/{value}")
     public Result<?> exist(@PathVariable String value) {
         Student student = studentService.stuInfo(value);

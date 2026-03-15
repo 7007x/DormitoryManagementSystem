@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Visitor;
 import com.example.springboot.service.VisitorService;
@@ -16,8 +17,9 @@ public class VisitorController {
     private VisitorService visitorService;
 
     /**
-     * 访客添加
+     * 访客添加 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @PostMapping("/add")
     public Result<?> add(@RequestBody Visitor visitor) {
         int i = visitorService.addNewVisitor(visitor);
@@ -29,8 +31,9 @@ public class VisitorController {
     }
 
     /**
-     * 访客信息更新
+     * 访客信息更新 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
     public Result<?> update(@RequestBody Visitor visitor) {
         int i = visitorService.updateNewVisitor(visitor);
@@ -42,8 +45,9 @@ public class VisitorController {
     }
 
     /**
-     * 访客删除
+     * 访客删除 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @DeleteMapping("/delete/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         int i = visitorService.deleteVisitor(id);
@@ -55,8 +59,9 @@ public class VisitorController {
     }
 
     /**
-     * 访客查询
+     * 访客查询 - 管理员和宿管可访问
      */
+    @RequireRole({"admin", "dormManager"})
     @GetMapping("/find")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,

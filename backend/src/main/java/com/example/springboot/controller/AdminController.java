@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.common.UID;
 import com.example.springboot.entity.Admin;
@@ -37,8 +38,9 @@ public class AdminController {
     }
 
     /**
-     * 管理员信息更新
+     * 管理员信息更新 - 仅管理员可访问
      */
+    @RequireRole("admin")
     @PutMapping("/update")
     public Result<?> update(@RequestBody Admin admin) {
         int i = adminService.updateAdmin(admin);
