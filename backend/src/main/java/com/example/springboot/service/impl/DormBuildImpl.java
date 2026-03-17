@@ -7,6 +7,7 @@ import com.example.springboot.entity.DormBuild;
 import com.example.springboot.mapper.DormBuildMapper;
 import com.example.springboot.service.DormBuildService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,6 +27,7 @@ public class DormBuildImpl extends ServiceImpl<DormBuildMapper, DormBuild> imple
      * 楼宇添加
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewBuilding(DormBuild dormBuild) {
         int insert = dormBuildMapper.insert(dormBuild);
         return insert;
@@ -47,6 +49,7 @@ public class DormBuildImpl extends ServiceImpl<DormBuildMapper, DormBuild> imple
      * 楼宇信息更新
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewBuilding(DormBuild dormBuild) {
         int i = dormBuildMapper.updateById(dormBuild);
         return i;
@@ -56,6 +59,7 @@ public class DormBuildImpl extends ServiceImpl<DormBuildMapper, DormBuild> imple
      * 楼宇删除
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteBuilding(Integer id) {
         int i = dormBuildMapper.deleteById(id);
         return i;

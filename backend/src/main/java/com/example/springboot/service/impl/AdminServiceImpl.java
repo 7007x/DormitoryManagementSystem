@@ -7,6 +7,7 @@ import com.example.springboot.entity.Admin;
 import com.example.springboot.mapper.AdminMapper;
 import com.example.springboot.service.AdminService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -41,6 +42,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      * 管理员信息更新
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateAdmin(Admin admin) {
         // 如果密码不为空且不是加密后的密码，则加密
         if (admin.getPassword() != null && !admin.getPassword().startsWith("$2a$")) {
