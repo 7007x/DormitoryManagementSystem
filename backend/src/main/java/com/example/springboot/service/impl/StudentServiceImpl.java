@@ -8,6 +8,7 @@ import com.example.springboot.entity.Student;
 import com.example.springboot.mapper.StudentMapper;
 import com.example.springboot.service.StudentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -42,6 +43,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      * 学生新增
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewStudent(Student student) {
         // 加密密码后再存储
         String encodedPassword = PasswordUtil.encode(student.getPassword());
@@ -66,6 +68,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      * 更新学生信息
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewStudent(Student student) {
         // 如果密码不为空且不是加密后的密码，则加密
         if (student.getPassword() != null && !student.getPassword().startsWith("$2a$")) {
@@ -80,6 +83,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      * 删除学生信息
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteStudent(String username) {
         int i = studentMapper.deleteById(username);
         return i;

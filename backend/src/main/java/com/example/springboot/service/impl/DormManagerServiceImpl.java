@@ -9,6 +9,7 @@ import com.example.springboot.entity.DormManager;
 import com.example.springboot.mapper.DormManagerMapper;
 import com.example.springboot.service.DormManagerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -44,6 +45,7 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
      * 宿管新增
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewDormManager(DormManager dormManager) {
         // 加密密码后再存储
         String encodedPassword = PasswordUtil.encode(dormManager.getPassword());
@@ -68,6 +70,7 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
      * 宿管信息更新
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewDormManager(DormManager dormManager) {
         // 如果密码不为空且不是加密后的密码，则加密
         if (dormManager.getPassword() != null && !dormManager.getPassword().startsWith("$2a$")) {
@@ -82,6 +85,7 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
      * 宿管删除
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteDormManager(String username) {
         int i = dormManagerMapper.deleteById(username);
         return i;

@@ -7,6 +7,7 @@ import com.example.springboot.entity.Visitor;
 import com.example.springboot.mapper.VisitorMapper;
 import com.example.springboot.service.VisitorService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,7 @@ public class VisitorServiceImpl extends ServiceImpl<VisitorMapper, Visitor> impl
      * 访客添加
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewVisitor(Visitor visitor) {
         int insert = visitorMapper.insert(visitor);
         return insert;
@@ -43,6 +45,7 @@ public class VisitorServiceImpl extends ServiceImpl<VisitorMapper, Visitor> impl
      * 访客信息更新
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewVisitor(Visitor visitor) {
         int i = visitorMapper.updateById(visitor);
         return i;
@@ -52,6 +55,7 @@ public class VisitorServiceImpl extends ServiceImpl<VisitorMapper, Visitor> impl
      * 访客删除
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteVisitor(Integer id) {
         int i = visitorMapper.deleteById(id);
         return i;

@@ -7,6 +7,7 @@ import com.example.springboot.entity.AdjustRoom;
 import com.example.springboot.mapper.AdjustRoomMapper;
 import com.example.springboot.service.AdjustRoomService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,7 @@ public class AdjustRoomServiceImpl extends ServiceImpl<AdjustRoomMapper, AdjustR
      * 添加调宿申请
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addApply(AdjustRoom adjustRoom) {
         int insert = adjustRoomMapper.insert(adjustRoom);
         return insert;
@@ -42,6 +44,7 @@ public class AdjustRoomServiceImpl extends ServiceImpl<AdjustRoomMapper, AdjustR
      * 删除调宿申请
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteAdjustment(Integer id) {
         int i = adjustRoomMapper.deleteById(id);
         return i;
@@ -52,6 +55,7 @@ public class AdjustRoomServiceImpl extends ServiceImpl<AdjustRoomMapper, AdjustR
      * 更新调宿申请
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateApply(AdjustRoom adjustRoom) {
         int i = adjustRoomMapper.updateById(adjustRoom);
         return i;

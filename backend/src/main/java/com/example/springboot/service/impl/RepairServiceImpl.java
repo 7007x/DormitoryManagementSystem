@@ -7,6 +7,7 @@ import com.example.springboot.entity.Repair;
 import com.example.springboot.mapper.RepairMapper;
 import com.example.springboot.service.RepairService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -22,9 +23,10 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     private RepairMapper repairMapper;
 
     /**
-     * 添加订单
+     * 添加报修订单
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewOrder(Repair repair) {
         int insert = repairMapper.insert(repair);
         return insert;
@@ -53,9 +55,10 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     }
 
     /**
-     * 更新订单
+     * 更新报修订单
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewOrder(Repair repair) {
         int i = repairMapper.updateById(repair);
         Assert.notNull(i, "保修单为空");
@@ -63,9 +66,10 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
     }
 
     /**
-     * 删除订单
+     * 删除报修订单
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteOrder(Integer id) {
         int i = repairMapper.deleteById(id);
         Assert.notNull(i, "保修单为空");

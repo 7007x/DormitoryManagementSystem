@@ -7,6 +7,7 @@ import com.example.springboot.entity.Notice;
 import com.example.springboot.mapper.NoticeMapper;
 import com.example.springboot.service.NoticeService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
      * 公告添加
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewNotice(Notice notice) {
         int insert = noticeMapper.insert(notice);
         return insert;
@@ -49,6 +51,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
      * 公告更新
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewNotice(Notice notice) {
         int i = noticeMapper.updateById(notice);
         return i;
@@ -58,6 +61,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
      * 公告删除
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteNotice(Integer id) {
         int i = noticeMapper.deleteById(id);
         return i;

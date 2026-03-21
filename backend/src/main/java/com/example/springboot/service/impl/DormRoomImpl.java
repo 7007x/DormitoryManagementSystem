@@ -10,6 +10,7 @@ import com.example.springboot.entity.DormRoom;
 import com.example.springboot.mapper.DormRoomMapper;
 import com.example.springboot.service.DormRoomService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -37,6 +38,7 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
      * 添加房间
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int addNewRoom(DormRoom dormRoom) {
         int insert = dormRoomMapper.insert(dormRoom);
         return insert;
@@ -58,6 +60,7 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
      * 更新房间
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int updateNewRoom(DormRoom dormRoom) {
         int i = dormRoomMapper.updateById(dormRoom);
         return i;
@@ -67,15 +70,17 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
      * 删除房间
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteRoom(Integer dormRoomId) {
         int i = dormRoomMapper.deleteById(dormRoomId);
         return i;
     }
 
     /**
-     * 删除床位上的学生信息
+     * 删除床位上的学生信息（释放床位）
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int deleteBedInfo(String bedName, Integer dormRoomId, int calCurrentNum) {
         UpdateWrapper updateWrapper = new UpdateWrapper();
         updateWrapper.eq("dormroom_id", dormRoomId);
@@ -161,8 +166,15 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
 
     /**
      * 根据调宿申请表对房间表内的学生床位进行调整
+     *
+     * 涉及两个数据库更新操作：
+     * 1. 释放旧床位（清空床位，人数-1）
+     * 2. 占用新床位（填入学生名，人数+1）
+     *
+     * 使用@Transactional保证操作的原子性，任何步骤失败都会自动回滚
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, timeout = 30, readOnly = false)
     public int adjustRoomUpdate(AdjustRoom adjustRoom) {
         //调宿人
         String username = adjustRoom.getUsername();
