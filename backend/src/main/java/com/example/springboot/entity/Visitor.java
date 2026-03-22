@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotBlank;
 
 /**
  * 访客
@@ -22,6 +23,7 @@ public class Visitor {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField("name")
+    @NotBlank(message = "访客姓名不能为空")
     private String visitorName;
     @TableField("gender")
     private String gender;

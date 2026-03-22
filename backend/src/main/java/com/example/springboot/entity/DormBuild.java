@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotBlank;
 
 /**
  * 宿舍楼
@@ -23,6 +24,7 @@ public class DormBuild {
     @TableField("dormbuild_id")
     private int dormBuildId;
     @TableField("dormbuild_name")
+    @NotBlank(message = "楼宇名称不能为空")
     private String dormBuildName;
     @TableField("dormbuild_detail")
     private String dormBuildDetail;

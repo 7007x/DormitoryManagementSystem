@@ -8,6 +8,7 @@ import com.example.springboot.service.DormBuildService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class DormBuildController {
      */
     @RequireRole("admin")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody DormBuild dormBuild) {
+    public Result<?> add(@Valid @RequestBody DormBuild dormBuild) {
         int i = dormBuildService.addNewBuilding(dormBuild);
         if (i == 1) {
             return Result.success();
@@ -37,7 +38,7 @@ public class DormBuildController {
      */
     @RequireRole("admin")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody DormBuild dormBuild) {
+    public Result<?> update(@Valid @RequestBody DormBuild dormBuild) {
         int i = dormBuildService.updateNewBuilding(dormBuild);
         if (i == 1) {
             return Result.success();

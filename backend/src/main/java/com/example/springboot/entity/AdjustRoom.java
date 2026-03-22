@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -16,17 +19,23 @@ public class AdjustRoom {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField(value = "username")
+    @NotBlank(message = "申请人不能为空")
     private String username;
     @TableField(value = "name")
+    @NotBlank(message = "申请人姓名不能为空")
     private String name;
     @TableField(value = "currentroom_id")
-    private int currentRoomId;
+    @NotNull(message = "当前房间ID不能为空")
+    private Integer currentRoomId;
     @TableField(value = "currentbed_id")
-    private int currentBedId;
+    @NotNull(message = "当前床位ID不能为空")
+    private Integer currentBedId;
     @TableField(value = "towardsroom_id")
-    private int towardsRoomId;
+    @NotNull(message = "目标房间ID不能为空")
+    private Integer towardsRoomId;
     @TableField(value = "towardsbed_id")
-    private int towardsBedId;
+    @NotNull(message = "目标床位ID不能为空")
+    private Integer towardsBedId;
     @TableField("state")
     private String state;
     @TableField("apply_time")

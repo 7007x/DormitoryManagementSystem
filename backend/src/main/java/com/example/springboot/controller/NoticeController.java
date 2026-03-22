@@ -9,6 +9,7 @@ import com.example.springboot.service.NoticeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class NoticeController {
      */
     @RequireRole("admin")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody Notice notice) {
+    public Result<?> add(@Valid @RequestBody Notice notice) {
         int i = noticeService.addNewNotice(notice);
         if (i == 1) {
             return Result.success();
@@ -37,7 +38,7 @@ public class NoticeController {
      */
     @RequireRole("admin")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Notice notice) {
+    public Result<?> update(@Valid @RequestBody Notice notice) {
         int i = noticeService.updateNewNotice(notice);
         if (i == 1) {
             return Result.success();

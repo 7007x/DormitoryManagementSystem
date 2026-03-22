@@ -8,6 +8,7 @@ import com.example.springboot.service.DormRoomService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -22,7 +23,7 @@ public class DormRoomController {
      */
     @RequireRole("admin")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody DormRoom dormRoom) {
+    public Result<?> add(@Valid @RequestBody DormRoom dormRoom) {
         int i = dormRoomService.addNewRoom(dormRoom);
         if (i == 1) {
             return Result.success();
@@ -36,7 +37,7 @@ public class DormRoomController {
      */
     @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
-    public Result<?> update(@RequestBody DormRoom dormRoom) {
+    public Result<?> update(@Valid @RequestBody DormRoom dormRoom) {
         int i = dormRoomService.updateNewRoom(dormRoom);
         if (i == 1) {
             return Result.success();
