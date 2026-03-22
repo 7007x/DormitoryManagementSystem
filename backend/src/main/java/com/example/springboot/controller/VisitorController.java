@@ -8,6 +8,7 @@ import com.example.springboot.service.VisitorService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/visitor")
@@ -21,7 +22,7 @@ public class VisitorController {
      */
     @RequireRole({"admin", "dormManager"})
     @PostMapping("/add")
-    public Result<?> add(@RequestBody Visitor visitor) {
+    public Result<?> add(@Valid @RequestBody Visitor visitor) {
         int i = visitorService.addNewVisitor(visitor);
         if (i == 1) {
             return Result.success();
@@ -35,7 +36,7 @@ public class VisitorController {
      */
     @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Visitor visitor) {
+    public Result<?> update(@Valid @RequestBody Visitor visitor) {
         int i = visitorService.updateNewVisitor(visitor);
         if (i == 1) {
             return Result.success();
