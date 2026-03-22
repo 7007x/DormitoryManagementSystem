@@ -1,6 +1,43 @@
 import Layout from '../layout/Layout.vue'
 import {createRouter, createWebHistory} from "vue-router";
 
+/**
+ * 角色路由权限配置
+ */
+const ROLE_ROUTES = {
+    admin: [
+        '/stuInfo', '/dormManagerInfo', '/buildingInfo', '/roomInfo',
+        '/noticeInfo', '/adjustRoomInfo', '/repairInfo', '/visitorInfo',
+        '/selfInfo', '/home'
+    ],
+    dormManager: [
+        '/buildingInfo', '/roomInfo', '/noticeInfo', '/repairInfo',
+        '/visitorInfo', '/selfInfo', '/home'
+    ],
+    student: [
+        '/myRoomInfo', '/applyRepairInfo', '/applyChangeRoom',
+        '/selfInfo', '/home'
+    ]
+}
+
+/**
+ * 检查用户是否有权限访问指定路径
+ * @param {string} identity - 用户角色
+ * @param {string} path - 要访问的路径
+ * @returns {boolean} - 是否有权限
+ */
+function hasPermission(identity, path) {
+    if (path === '/Login' || path === '/Layout' || path === '/') {
+        return true
+    }
+
+    const allowedPaths = ROLE_ROUTES[identity]
+    if (!allowedPaths) {
+        return false
+    }
+
+    return allowedPaths.some(allowedPath => path.startsWith(allowedPath))
+}
 
 export const constantRoutes = [
     {path: '/Login', name: 'Login', component: () => import("@/views/Login")},
@@ -30,23 +67,28 @@ const router = createRouter({
     routes: constantRoutes,
     history: createWebHistory(process.env.BASE_URL)
 })
-//路由守卫
+
 router.beforeEach((to, from, next) => {
-    //to 要访问的路径
-    //from 代表从哪个路径跳转而来
-    // next 是函数，表示放行
-    // next() 放行
-    // next('/*') 强制跳转
     const user = window.sessionStorage.getItem('user')
+    const identity = window.sessionStorage.getItem('identity')
+
     if (to.path === '/Login') {
-        return next();
+        return next()
     }
-    if (!user) {
+
+    if (!user || !identity) {
         return next('/Login')
     }
-    if (to.path === '/' && user) {
+
+    if (to.path === '/') {
         return next('/home')
     }
+
+    if (!hasPermission(identity, to.path)) {
+        console.warn(`[权限拦截] 角色 ${identity} 无权访问 ${to.path}`)
+        return next('/home')
+    }
+
     next()
 })
 
