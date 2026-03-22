@@ -9,6 +9,7 @@ import com.example.springboot.service.DormRoomService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/adjustRoom")
@@ -26,7 +27,7 @@ public class AdjustRoomController {
      */
     @RequireRole("stu")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody AdjustRoom adjustRoom) {
+    public Result<?> add(@Valid @RequestBody AdjustRoom adjustRoom) {
 
         int result = adjustRoomService.addApply(adjustRoom);
         if (result == 1) {
@@ -42,7 +43,7 @@ public class AdjustRoomController {
      */
     @RequireRole("admin")
     @PutMapping("/update/{state}")
-    public Result<?> update(@RequestBody AdjustRoom adjustRoom, @PathVariable Boolean state) {
+    public Result<?> update(@Valid @RequestBody AdjustRoom adjustRoom, @PathVariable Boolean state) {
         if (state) {
             // 更新房间表信息
             int i = dormRoomService.adjustRoomUpdate(adjustRoom);

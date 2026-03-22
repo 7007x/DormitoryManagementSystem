@@ -17,6 +17,7 @@ import java.util.Base64;
 
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class FileController {
      * 将头像名称更新到数据库中
      */
     @PostMapping("/uploadAvatar/stu")
-    public Result<?> uploadStuAvatar(@RequestBody Student student) {
+    public Result<?> uploadStuAvatar(@Valid @RequestBody Student student) {
         if (originalFilename != null) {
             student.setAvatar(originalFilename);
             log.info("Updating student avatar: {}", student);
@@ -82,7 +83,7 @@ public class FileController {
     }
 
     @PostMapping("/uploadAvatar/admin")
-    public Result<?> uploadAdminAvatar(@RequestBody Admin admin) {
+    public Result<?> uploadAdminAvatar(@Valid @RequestBody Admin admin) {
         if (originalFilename != null) {
             admin.setAvatar(originalFilename);
             int i = adminService.updateAdmin(admin);
@@ -96,7 +97,7 @@ public class FileController {
     }
 
     @PostMapping("/uploadAvatar/dormManager")
-    public Result<?> uploadDormManagerAvatar(@RequestBody DormManager dormManager) {
+    public Result<?> uploadDormManagerAvatar(@Valid @RequestBody DormManager dormManager) {
         if (originalFilename != null) {
             dormManager.setAvatar(originalFilename);
             int i = dormManagerService.updateNewDormManager(dormManager);

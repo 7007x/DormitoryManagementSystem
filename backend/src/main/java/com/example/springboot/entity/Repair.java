@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 报修单
@@ -20,14 +23,19 @@ public class Repair {
     @TableId(value = "id")
     private Integer id;
     @TableField("repairer")
+    @NotBlank(message = "报修人不能为空")
     private String repairer;
     @TableField("dormbuild_id")
-    private int dormBuildId;
+    @NotNull(message = "楼宇ID不能为空")
+    private Integer dormBuildId;
     @TableField("dormroom_id")
-    private int dormRoomId;
+    @NotNull(message = "房间ID不能为空")
+    private Integer dormRoomId;
     @TableField("title")
+    @NotBlank(message = "报修标题不能为空")
     private String title;
     @TableField("content")
+    @NotBlank(message = "报修内容不能为空")
     private String content;
     @TableField("state")
     private String state;

@@ -1,8 +1,13 @@
 package com.example.springboot.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 /**
  * 全局异常处理器
@@ -49,6 +54,35 @@ public class GlobalExceptionHandler {
     public Result<?> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error("参数错误: {}", e.getMessage());
         return Result.error("400", "参数错误: " + e.getMessage());
+    }
+
+    /**
+     * 处理 JSR-303 校验异常（@RequestBody 参数校验）
+     *
+     * @param e 捕获到的校验异常
+     * @return 统一的 Result 对象，包含第一个错误消息
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        log.warn("参数校验失败: {}", message);
+        return Result.error("-1", message);
+    }
+
+    /**
+     * 处理 JSR-303 校验异常（@RequestParam/@PathVariable 参数校验）
+     *
+     * @param e 捕获到的校验异常
+     * @return 统一的 Result 对象，包含第一个错误消息
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Result<?> handleConstraintViolationException(ConstraintViolationException e) {
+        String message = e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("参数校验失败");
+        log.warn("参数校验失败: {}", message);
+        return Result.error("-1", message);
     }
 
     /**

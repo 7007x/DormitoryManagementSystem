@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 宿舍房间
@@ -20,13 +22,17 @@ public class DormRoom {
     @TableId(value = "dormroom_id")
     private Integer dormRoomId;
     @TableField("dormbuild_id")
-    private int dormBuildId;
+    @NotNull(message = "楼宇ID不能为空")
+    private Integer dormBuildId;
     @TableField("floor_num")
-    private int floorNum;
+    @NotNull(message = "楼层不能为空")
+    @Min(value = 1, message = "楼层必须大于0")
+    private Integer floorNum;
     @TableField("max_capacity")
-    private int maxCapacity;
+    @Min(value = 1, message = "容量必须大于0")
+    private Integer maxCapacity;
     @TableField("current_capacity")
-    private int currentCapacity;
+    private Integer currentCapacity;
     @TableField("first_bed")
     private String firstBed;
     @TableField("second_bed")

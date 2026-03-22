@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -23,7 +24,7 @@ public class RepairController {
      */
     @RequireRole("stu")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody Repair repair) {
+    public Result<?> add(@Valid @RequestBody Repair repair) {
         int i = repairService.addNewOrder(repair);
         if (i == 1) {
             return Result.success();
@@ -37,7 +38,7 @@ public class RepairController {
      */
     @RequireRole({"admin", "dormManager"})
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Repair repair) {
+    public Result<?> update(@Valid @RequestBody Repair repair) {
         int i = repairService.updateNewOrder(repair);
         if (i == 1) {
             return Result.success();

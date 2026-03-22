@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -25,7 +26,7 @@ public class DormManagerController {
      */
     @RequireRole("admin")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody DormManager dormManager) {
+    public Result<?> add(@Valid @RequestBody DormManager dormManager) {
         int i = dormManagerService.addNewDormManager(dormManager);
         if (i == 1) {
             return Result.success();
@@ -39,7 +40,7 @@ public class DormManagerController {
      */
     @RequireRole("admin")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody DormManager dormManager) {
+    public Result<?> update(@Valid @RequestBody DormManager dormManager) {
         int i = dormManagerService.updateNewDormManager(dormManager);
         if (i == 1) {
             return Result.success();

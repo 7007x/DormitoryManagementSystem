@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -44,7 +45,7 @@ public class AdminController {
      */
     @RequireRole("admin")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Admin admin) {
+    public Result<?> update(@Valid @RequestBody Admin admin) {
         int i = adminService.updateAdmin(admin);
         if (i == 1) {
             return Result.success();
