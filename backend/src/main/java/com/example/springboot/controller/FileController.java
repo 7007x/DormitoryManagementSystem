@@ -9,6 +9,7 @@ import com.example.springboot.entity.Student;
 import com.example.springboot.service.AdminService;
 import com.example.springboot.service.DormManagerService;
 import com.example.springboot.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/files")
 public class FileController {
@@ -44,17 +46,17 @@ public class FileController {
     public Result<?> upload(MultipartFile file) throws IOException {
         //获取文件名
         originalFilename = file.getOriginalFilename();
-        System.out.println(originalFilename);
+        log.debug("Upload - original filename: {}", originalFilename);
         //获取文件尾缀
         String fileType = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
 
         //重命名
         String uid = new UID().produceUID();
         originalFilename = uid + fileType;
-        System.out.println(originalFilename);
+        log.debug("Upload - renamed filename: {}", originalFilename);
         //存储位置
         String targetPath = rootFilePath + originalFilename;
-        System.out.println(targetPath);
+        log.debug("Upload - target path: {}", targetPath);
         //获取字节流
         FileUtil.writeBytes(file.getBytes(), targetPath);
 
@@ -68,7 +70,7 @@ public class FileController {
     public Result<?> uploadStuAvatar(@RequestBody Student student) {
         if (originalFilename != null) {
             student.setAvatar(originalFilename);
-            System.out.println(student);
+            log.info("Updating student avatar: {}", student);
             int i = studentService.updateNewStudent(student);
             if (i == 1) {
                 return Result.success(originalFilename);
@@ -112,9 +114,9 @@ public class FileController {
      */
     @GetMapping("/initAvatar/{filename}")
     public Result<?> initAvatar(@PathVariable String filename) throws IOException {
-        System.out.println(filename);
+        log.debug("Init avatar - filename: {}", filename);
         String path = rootFilePath + filename;
-        System.out.println(path);
+        log.debug("Init avatar - path: {}", path);
         return Result.success(getImage(path));
     }
 

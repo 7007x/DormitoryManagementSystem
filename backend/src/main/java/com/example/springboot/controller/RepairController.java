@@ -5,10 +5,12 @@ import com.example.springboot.common.RequireRole;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Repair;
 import com.example.springboot.service.RepairService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+@Slf4j
 @RestController
 @RequestMapping("/repair")
 public class RepairController {
@@ -83,7 +85,7 @@ public class RepairController {
                                     @RequestParam(defaultValue = "10") Integer pageSize,
                                     @RequestParam(defaultValue = "") String search,
                                     @PathVariable String name) {
-        System.out.println(name);
+        log.debug("Individual repair search - name: {}", name);
         Page page = repairService.individualFind(pageNum, pageSize, search, name);
         if (page != null) {
             return Result.success(page);

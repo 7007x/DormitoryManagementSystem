@@ -6,11 +6,13 @@ import com.example.springboot.common.Result;
 import com.example.springboot.entity.DormManager;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.DormManagerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RestController
 @RequestMapping("/dormManager")
 public class DormManagerController {
@@ -83,7 +85,7 @@ public class DormManagerController {
     public Result<?> login(@RequestBody User user, HttpSession session) {
         Object o = dormManagerService.dormManagerLogin(user.getUsername(), user.getPassword());
         if (o != null) {
-            System.out.println(o);
+            log.info("DormManager login successful: {}", o);
             //存入session
             session.setAttribute("Identity", "dormManager");
             session.setAttribute("User", o);

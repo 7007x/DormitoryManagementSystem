@@ -6,11 +6,13 @@ import com.example.springboot.common.Result;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RestController
 @RequestMapping("/stu")
 public class StudentController {
@@ -82,11 +84,10 @@ public class StudentController {
      */
     @PostMapping("/login")
     public Result<?> login(@RequestBody User user, HttpSession session) {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
+        log.debug("Student login attempt - username: {}", user.getUsername());
         Object o = studentService.stuLogin(user.getUsername(), user.getPassword());
         if (o != null) {
-            System.out.println(o);
+            log.info("Student login successful: {}", o);
             //存入session
             session.setAttribute("Identity", "stu");
             session.setAttribute("User", o);
